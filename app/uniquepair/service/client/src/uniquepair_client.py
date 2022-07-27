@@ -1,0 +1,40 @@
+# Copyright (C) 2020 Georgia Tech Center for Experimental Research in Computer
+# Systems
+
+from buzzblog.gen import TUniquepairService
+from buzzblog.base_client import BaseClient
+
+
+class Client(BaseClient):
+  def __init__(self, ip_address, port, timeout=30000, logger=None, connection_pool=None):
+    super().__init__(TUniquepairService.Client, ip_address, port, timeout,
+        logger, connection_pool)
+
+  def get(self, request_metadata, uniquepair_id):
+    return self.rpc_wrapper(request_metadata.id, "uniquepair:get")(
+        self._tclient.get, request_metadata=request_metadata,
+        uniquepair_id=uniquepair_id)
+
+  def add(self, request_metadata, domain, first_elem, second_elem):
+    return self.rpc_wrapper(request_metadata.id, "uniquepair:add")(
+        self._tclient.add, request_metadata=request_metadata, domain=domain,
+        first_elem=first_elem, second_elem=second_elem)
+
+  def remove(self, request_metadata, uniquepair_id):
+    return self.rpc_wrapper(request_metadata.id, "uniquepair:remove")(
+        self._tclient.remove, request_metadata=request_metadata,
+        uniquepair_id=uniquepair_id)
+
+  def find(self, request_metadata, domain, first_elem, second_elem):
+    return self.rpc_wrapper(request_metadata.id, "uniquepair:find")(
+        self._tclient.find, request_metadata=request_metadata, domain=domain,
+        first_elem=first_elem, second_elem=second_elem)
+
+  def fetch(self, request_metadata, query, limit, offset):
+    return self.rpc_wrapper(request_metadata.id, "uniquepair:fetch")(
+        self._tclient.fetch, request_metadata=request_metadata, query=query,
+        limit=limit, offset=offset)
+
+  def count(self, request_metadata, query):
+    return self.rpc_wrapper(request_metadata.id, "uniquepair:count")(
+        self._tclient.count, request_metadata=request_metadata, query=query)
