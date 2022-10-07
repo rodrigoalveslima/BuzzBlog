@@ -63,13 +63,11 @@ class PostgresConnectionPool {
       std::unique_lock<std::mutex> lock(_conn_pool_mutex);
       if (_pool_current_size < _pool_min_size) {
         _pool_current_size++;
-        conn = std::make_shared<pqxx::connection>(_conn_cstr);
       } else if (_conn_pool.size() > 0) {
         conn = _conn_pool.front();
         _conn_pool.pop();
       } else if (_pool_current_size < _pool_max_size || _allow_ephemeral) {
         _pool_current_size++;
-        conn = std::make_shared<pqxx::connection>(_conn_cstr);
       } else {
         backlog_len = ++_backlog_len;
         while (_conn_pool.empty()) _conn_pool_condition.wait(lock);
@@ -78,9 +76,8 @@ class PostgresConnectionPool {
         _conn_pool.pop();
       }
       lock.unlock();
-    } else {
-      conn = std::make_shared<pqxx::connection>(_conn_cstr);
     }
+    if (conn == nullptr) conn = std::make_shared<pqxx::connection>(_conn_cstr);
     std::chrono::duration<double> latency =
         std::chrono::steady_clock::now() - start_time;
     if (_query_conn_logger)

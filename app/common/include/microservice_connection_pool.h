@@ -68,15 +68,11 @@ class MicroserviceConnectionPool {
       std::unique_lock<std::mutex> lock(_conn_pool_mutex);
       if (_pool_current_size < _pool_min_size) {
         server = _servers[_pool_current_size++ % int(_servers.size())];
-        conn =
-            std::make_shared<T>(server.first, server.second, _conn_timeout_ms);
       } else if (_conn_pool.size() > 0) {
         conn = _conn_pool.front();
         _conn_pool.pop();
       } else if (_pool_current_size < _pool_max_size || _allow_ephemeral) {
         server = _servers[_pool_current_size++ % int(_servers.size())];
-        conn =
-            std::make_shared<T>(server.first, server.second, _conn_timeout_ms);
       } else {
         backlog_len = ++_backlog_len;
         while (_conn_pool.empty()) _conn_pool_condition.wait(lock);
@@ -87,8 +83,9 @@ class MicroserviceConnectionPool {
       lock.unlock();
     } else {
       server = _servers[rand() % int(_servers.size())];
-      conn = std::make_shared<T>(server.first, server.second, _conn_timeout_ms);
     }
+    if (conn == nullptr)
+      conn = std::make_shared<T>(server.first, server.second, _conn_timeout_ms);
     std::chrono::duration<double> latency =
         std::chrono::steady_clock::now() - start_time;
     if (_rpc_conn_logger)
