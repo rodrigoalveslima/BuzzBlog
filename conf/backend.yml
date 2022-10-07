@@ -1,0 +1,28 @@
+# Copyright (C) 2022 Georgia Tech Center for Experimental Research in Computer
+# Systems
+
+account:
+  service:
+    - "172.17.0.1:9090"
+  database: "172.17.0.1:5433"
+follow:
+  service:
+    - "172.17.0.1:9091"
+like:
+  service:
+    - "172.17.0.1:9092"
+post:
+  service:
+    - "172.17.0.1:9093"
+  database: "172.17.0.1:5434"
+uniquepair:
+  service:
+    - "172.17.0.1:9094"
+  database: "172.17.0.1:5435"
+trending:
+  service:
+    - "172.17.0.1:9095"
+  redis: "172.17.0.1:6379"
+wordfilter:
+  service:
+    - "172.17.0.1:9096"
