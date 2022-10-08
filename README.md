@@ -4,6 +4,8 @@ microservice-based systems. As with Twitter, users can write posts, follow other
 users, and like posts.
 
 ## Architecture
+![BuzzBlog Architecture](BuzzBlogArchitecture.png)
+
 ### API Gateway
 The API Gateway is an HTTP server that receives calls to the BuzzBlog API from
 clients, makes RPCs to backend microservices, and replies JSON-encoded data back
